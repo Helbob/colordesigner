@@ -4,6 +4,7 @@ window.addEventListener("DOMContentLoaded", start);
 
 const settings = {
   selectedColor: null,
+  harmony: analogous,
 };
 
 function start() {
@@ -14,6 +15,7 @@ function start() {
   registerButtons();
 
   // make sure we select analogous
+  document.querySelector("#analog").checked = true;
 }
 
 function registerButtons() {
@@ -60,6 +62,14 @@ function createFourCopies(original) {
 // clamp
 
 // calculate four analogous colors from a basecolor
+function analogous(base, colors) {
+  //const colors = createFourCopies(base);
+
+  colors[0].h = base.h - 30;
+  colors[1].h = base.h - 60;
+  colors[2].h = base.h + 30;
+  colors[3].h = base.h + 60;
+}
 
 //  monochromatic
 
@@ -77,6 +87,7 @@ function setHarmony(harmony) {
   console.log("setHarmony", harmony);
   switch (harmony) {
     case "analog":
+      settings.harmony = analogous;
       break;
     //case se hvad value er i html ting ting
   }
@@ -91,7 +102,7 @@ function setBaseColor(color) {
 
   settings.selectedColor = color;
 
-  calculateHarmony();
+  //calculateHarmony();
 }
 
 // calculateHarmony
@@ -102,13 +113,9 @@ function calculateHarmony() {
 
   //console.log("settings selector base", settings.selectedColor);
   //console.log("calculateHarmony base", base);
-
   const colors = createFourCopies(base);
+  settings.harmony(base, colors);
 
-  colors[0].h = base.h - 30;
-  colors[1].h = base.h - 60;
-  colors[2].h = base.h + 30;
-  colors[3].h = base.h + 60;
   console.log(colors);
 
   colors.forEach((color, i) => {
