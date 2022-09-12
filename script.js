@@ -9,9 +9,9 @@ const settings = {
 
 function start() {
   console.log("Start program");
-
-  // start with a random color
   setBaseColor(getRandomColor());
+  // start with a random color
+
   registerButtons();
 
   // make sure we select analogous
@@ -25,13 +25,11 @@ function registerButtons() {
     .addEventListener("input", changeBaseColor);
 
   // harmonies
-  document
-    .querySelector("#harmonies")
-    .addEventListener("click", changeHarmony, false);
+  document.querySelector("#harmonies").addEventListener("click", changeHarnony);
 }
 // change harmony
-function changeHarmony(event) {
-  console.log("changeHarmony", event.target.value);
+function changeHarnony(event) {
+  //console.log("changeHarnony", event.target.value);
   const harmony = event.target.value;
   if (harmony) {
     setHarmony(harmony);
@@ -63,16 +61,18 @@ function createFourCopies(original) {
 
 // calculate four analogous colors from a basecolor
 function analogous(base, colors) {
-  //const colors = createFourCopies(base);
-
   colors[0].h = base.h - 30;
   colors[1].h = base.h - 60;
   colors[2].h = base.h + 30;
   colors[3].h = base.h + 60;
 }
-
 //  monochromatic
-
+function monochromatic(base, colors) {
+  colors[0].s = base.s - 20;
+  colors[1].l = base.l + 30;
+  colors[2].s = base.s - 10;
+  colors[3].l = base.l - 20;
+}
 //  triadic
 
 // complementary
@@ -82,16 +82,16 @@ function analogous(base, colors) {
 // shades
 
 // setHarmony
-//husk break efter hver case eller breaker det. smiler
 function setHarmony(harmony) {
   console.log("setHarmony", harmony);
   switch (harmony) {
     case "analog":
       settings.harmony = analogous;
       break;
-    //case se hvad value er i html ting ting
+    case "monochromatic":
+      settings.harmony = monochromatic;
+    //if more cases do break;
   }
-
   calculateHarmony();
 }
 
@@ -102,29 +102,25 @@ function setBaseColor(color) {
 
   settings.selectedColor = color;
 
-  //calculateHarmony();
+  calculateHarmony();
 }
 
 // calculateHarmony
 function calculateHarmony() {
   const indexes = [1, 2, 4, 5];
-  //const indexes = [0, 1, 3, 4];
   const base = convertRGBToHSL(convertHexToRGB(settings.selectedColor));
 
-  //console.log("settings selector base", settings.selectedColor);
-  //console.log("calculateHarmony base", base);
+  // console.log("settings.selectedColor", settings.selectedColor);
+  // console.log("calculateHarmony base", base);
   const colors = createFourCopies(base);
   settings.harmony(base, colors);
-
-  console.log(colors);
-
+  console.log("colors", colors);
   colors.forEach((color, i) => {
     const rgb = convertHSLtoRGB(color);
     const hex = convertRGBtoHEX(rgb);
     showColor(indexes[i], hex);
   });
 }
-
 function showColor(index, color) {
   const colorinfo = document.querySelector("#color" + index);
 
